@@ -155,7 +155,7 @@ final class SakuraSpawners extends PluginBase{
             };
             if($entityTypeId !== null){
                 $returnedItems = [];
-                (new SpawnEgg(new ItemIdentifier($item->getTypeId()), $item->getName(), $entityTypeId))->onInteractBlock($event->getPlayer(), $event->getBlock()->getSide(Facing::opposite($event->getFace())), $event->getBlock(), $event->getFace(), $event->getTouchVector(), $returnedItems);
+                (new SpawnEgg(new ItemIdentifier($item->getTypeId()), $item->getName(), $entityTypeId))->onInteractBlock($event->getPlayer(), $event->getBlock()->getSide($event->getFace()), $event->getBlock(), $event->getFace(), $event->getTouchVector(), $returnedItems);
                 $event->cancel();
             }
         }, EventPriority::HIGH, $this);
