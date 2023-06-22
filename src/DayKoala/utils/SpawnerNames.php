@@ -23,7 +23,6 @@ namespace DayKoala\utils;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\utils\Config;
 use pocketmine\utils\Filesystem;
-use function yaml_emit;
 use function yaml_parse;
 
 final class SpawnerNames{

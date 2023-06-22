@@ -25,7 +25,9 @@ use pocketmine\data\bedrock\item\SavedItemData;
 use pocketmine\data\bedrock\LegacyEntityIdToStringIdMap;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\EventPriority;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\world\ChunkLoadEvent;
+use pocketmine\math\Facing;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\plugin\PluginBase;
 
@@ -140,6 +142,23 @@ final class SakuraSpawners extends PluginBase{
                 }
             }
         }, EventPriority::MONITOR, $this);
+        $this->getServer()->getPluginManager()->registerEvent(PlayerInteractEvent::class, function(PlayerInteractEvent $event) : void{
+            if($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK){
+                return;
+            }
+            $item = $event->getItem();
+            $entityTypeId = match($item->getTypeId()){
+                ItemTypeIds::SQUID_SPAWN_EGG => EntityIds::SQUID,
+                ItemTypeIds::VILLAGER_SPAWN_EGG => EntityIds::VILLAGER_V2,
+                ItemTypeIds::ZOMBIE_SPAWN_EGG => EntityIds::ZOMBIE,
+                default => null
+            };
+            if($entityTypeId !== null){
+                $returnedItems = [];
+                (new SpawnEgg(new ItemIdentifier($item->getTypeId()), $item->getName(), $entityTypeId))->onInteractBlock($event->getPlayer(), $event->getBlock()->getSide(Facing::opposite($event->getFace())), $event->getBlock(), $event->getFace(), $event->getTouchVector(), $returnedItems);
+                $event->cancel();
+            }
+        }, EventPriority::HIGH, $this);
     }
 
     public function updateSpawner(MonsterSpawner $tile) : void{
@@ -362,7 +381,6 @@ final class SakuraSpawners extends PluginBase{
                 EntityIds::SLIME => ItemTypeNames::SLIME_SPAWN_EGG,
                 EntityIds::SNOW_GOLEM => ItemTypeNames::SNOW_GOLEM_SPAWN_EGG,
                 EntityIds::SPIDER => ItemTypeNames::SPIDER_SPAWN_EGG,
-                // EntityIds::SQUID => ItemTypeNames::SQUID_SPAWN_EGG,
                 EntityIds::STRAY => ItemTypeNames::STRAY_SPAWN_EGG,
                 EntityIds::STRIDER => ItemTypeNames::STRIDER_SPAWN_EGG,
                 EntityIds::TADPOLE => ItemTypeNames::TADPOLE_SPAWN_EGG,
@@ -370,7 +388,6 @@ final class SakuraSpawners extends PluginBase{
                 EntityIds::TROPICALFISH => ItemTypeNames::TROPICAL_FISH_SPAWN_EGG,
                 EntityIds::TURTLE => ItemTypeNames::TURTLE_SPAWN_EGG,
                 EntityIds::VEX => ItemTypeNames::VEX_SPAWN_EGG,
-                // EntityIds::VILLAGER_V2 => ItemTypeNames::VILLAGER_SPAWN_EGG,
                 EntityIds::VINDICATOR => ItemTypeNames::VINDICATOR_SPAWN_EGG,
                 EntityIds::WANDERING_TRADER => ItemTypeNames::WANDERING_TRADER_SPAWN_EGG,
                 EntityIds::WARDEN => ItemTypeNames::WARDEN_SPAWN_EGG,
@@ -381,7 +398,6 @@ final class SakuraSpawners extends PluginBase{
                 EntityIds::ZOGLIN => ItemTypeNames::ZOGLIN_SPAWN_EGG,
                 EntityIds::ZOMBIE_HORSE => ItemTypeNames::ZOMBIE_HORSE_SPAWN_EGG,
                 EntityIds::ZOMBIE_PIGMAN => ItemTypeNames::ZOMBIE_PIGMAN_SPAWN_EGG,
-                // EntityIds::ZOMBIE => ItemTypeNames::ZOMBIE_SPAWN_EGG,
                 EntityIds::ZOMBIE_VILLAGER_V2 => ItemTypeNames::ZOMBIE_VILLAGER_SPAWN_EGG,
                 default => null
             };
