@@ -1,84 +1,83 @@
-10: "Chicken"
-11: "Cow"
-12: "Pig"
-13: "Sheep"
-14: "Wolf"
-15: "Villager"
-16: "Mooshroom"
-17: "Squid"
-18: "Rabbit"
-19: "Bat"
-20: "Iron Golem"
-21: "Snow Golem"
-22: "Ocelot"
-23: "Horse"
-24: "Donkey"
-25: "Mule"
-26: "Skeleton Horse"
-27: "Zombie Horse"
-28: "Polar Bear"
-29: "Llama"
-30: "Parrot"
-31: "Dolphin"
-32: "Zombie"
-33: "Creeper"
-34: "Skeleton"
-35: "Spider"
-36: "Zombie Pigman"
-37: "Slime"
-38: "Enderman"
-39: "Silverfish"
-40: "Cave Spider"
-41: "Ghast"
-42: "Magma Cube"
-43: "Blaze"
-44: "Zombie Villager"
-45: "Witch"
-46: "Stray"
-47: "Husk"
-48: "Wither Skeleton"
-49: "Guardian"
-50: "Elder Guardian"
-51: "NPC"
-52: "Wither"
-53: "Ender Dragon"
-54: "Shulker"
-55: "Endermite"
-56: "Agent"
-57: "Vindicator"
-58: "Phantom"
-59: "Ravanger"
-62: "Tripod Camera"
-68: "XP Bottle"
-71: "Ender Crystal"
-72: "Fireworks"
-74: "Turtle"
-75: "Cat"
-78: "Chalkboard"
-85: "Fireball"
-93: "Lightning Bolt"
-94: "Small Fireball"
-103: "Evocation Fang"
-104: "Evocation Illager"
-105: "Vex"
-109: "Salmon"
-110: "Drowned"
-111: "Tropicalfish"
-112: "Cod"
-113: "Panda"
-114: "Pillager"
-115: "Villager"
-118: "Wandering Trader"
-116: "Zombie Villager"
-121: "Fox"
-122: "Bee"
-123: "Piglin"
-124: "Hoglin"
-125: "Strider"
-126: "Zoglin"
-127: "Piglin Brute"
-128: "Goat"
-131: "Warden"
-132: "Frog"
-133: "Tadpole"
-134: "Allay"
+minecraft:chicken: Chicken
+minecraft:cow: Cow
+minecraft:pig: Pig
+minecraft:sheep: Sheep
+minecraft:wolf: Wolf
+minecraft:villager: Villager
+minecraft:mooshroom: Mooshroom
+minecraft:squid: Squid
+minecraft:rabbit: Rabbit
+minecraft:bat: Bat
+minecraft:iron_golem: Iron Golem
+minecraft:snow_golem: Snow Golem
+minecraft:ocelot: Ocelot
+minecraft:horse: Horse
+minecraft:donkey: Donkey
+minecraft:mule: Mule
+minecraft:skeleton_horse: Skeleton Horse
+minecraft:zombie_horse: Zombie Horse
+minecraft:polar_bear: Polar Bear
+minecraft:llama: Llama
+minecraft:parrot: Parrot
+minecraft:dolphin: Dolphin
+minecraft:zombie: Zombie
+minecraft:creeper: Creeper
+minecraft:skeleton: Skeleton
+minecraft:spider: Spider
+minecraft:zombie_pigman: Zombie Pigman
+minecraft:slime: Slime
+minecraft:enderman: Enderman
+minecraft:silverfish: Silverfish
+minecraft:cave_spider: Cave Spider
+minecraft:ghast: Ghast
+minecraft:magma_cube: Magma Cube
+minecraft:blaze: Blaze
+minecraft:zombie_villager: Zombie Villager
+minecraft:witch: Witch
+minecraft:stray: Stray
+minecraft:husk: Husk
+minecraft:wither_skeleton: Wither Skeleton
+minecraft:guardian: Guardian
+minecraft:elder_guardian: Elder Guardian
+minecraft:npc: NPC
+minecraft:wither: Wither
+minecraft:ender_dragon: Ender Dragon
+minecraft:shulker: Shulker
+minecraft:endermite: Endermite
+minecraft:agent: Agent
+minecraft:vindicator: Vindicator
+minecraft:phantom: Phantom
+minecraft:ravager: Ravanger
+minecraft:tripod_camera: Tripod Camera
+minecraft:xp_bottle: XP Bottle
+minecraft:ender_crystal: Ender Crystal
+minecraft:fireworks_rocket: Fireworks
+minecraft:turtle: Turtle
+minecraft:cat: Cat
+minecraft:fireball: Fireball
+minecraft:lightning_bolt: Lightning Bolt
+minecraft:small_fireball: Small Fireball
+minecraft:evocation_fang: Evocation Fang
+minecraft:evocation_illager: Evocation Illager
+minecraft:vex: Vex
+minecraft:salmon: Salmon
+minecraft:drowned: Drowned
+minecraft:tropicalfish: Tropicalfish
+minecraft:cod: Cod
+minecraft:panda: Panda
+minecraft:pillager: Pillager
+minecraft:villager_v2: Villager V2
+minecraft:wandering_trader: Wandering Trader
+minecraft:zombie_villager_v2: Zombie Villager V2
+minecraft:fox: Fox
+minecraft:bee: Bee
+minecraft:piglin: Piglin
+minecraft:hoglin: Hoglin
+minecraft:strider: Strider
+minecraft:zoglin: Zoglin
+minecraft:piglin_brute: Piglin Brute
+minecraft:boat: Goat
+minecraft:warden: Warden
+minecraft:frog: Frog
+minecraft:tadpole: Tadpole
+minecraft:allay: Allay

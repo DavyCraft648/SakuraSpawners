@@ -47,6 +47,7 @@ use DayKoala\utils\traits\StackableTrait;
 use DayKoala\utils\SpawnerNames;
 
 use DayKoala\SakuraSpawners;
+use function array_search;
 
 class SpawnerEntity extends Living{
 
@@ -59,12 +60,30 @@ class SpawnerEntity extends Living{
 
     protected string $display;
 
-    public function __construct(Location $location, ?CompoundTag $nbt = null){
-        $this->legacyNetworkTypeId = LegacyEntityIdToStringIdMap::getInstance()->stringToLegacy($this->networkTypeId = $nbt->getString("id", static::getNetworkTypeId())) ?? 0;
+    public function __construct(Location $location, string $entityTypeId, ?CompoundTag $nbt = null){
+        $this->setEntityTypeId($entityTypeId);
         $this->display = SakuraSpawners::getInstance()->getDefaultEntityName();
         parent::__construct($location, $nbt);
 
         $this->setNameTagAlwaysVisible(true);
+    }
+
+    public function setEntityTypeId(string $type) : SpawnerEntity{
+        $legacyNetworkTypeId = array_search($this->networkTypeId = $type, LegacyEntityIdToStringIdMap::getInstance()->getLegacyToStringMap(), true);
+        $this->legacyNetworkTypeId = $legacyNetworkTypeId === false ? 0 : $legacyNetworkTypeId;
+        return $this;
+    }
+
+    protected function initEntity(CompoundTag $nbt) : void{
+        parent::initEntity($nbt);
+
+        $this->setStackSize($nbt->getInt("sakuraspawners:stackSize", 1));
+    }
+
+    public function saveNBT() : CompoundTag{
+        return parent::saveNBT()
+            ->setString("sakuraspawners:entityTypeId", $this->networkTypeId)
+            ->setInt("sakuraspawners:stackSize", $this->getStackSize());
     }
 
     public function getModifiedNetworkTypeId() : String{
@@ -76,19 +95,15 @@ class SpawnerEntity extends Living{
     }
 
     public function getName() : String{
-        return SpawnerNames::getName($this->legacyNetworkTypeId);
+        return SpawnerNames::getName($this->networkTypeId);
     }
 
-    public function getDrops() : Array{
+    public function getDrops() : array{
         return SakuraSpawners::getInstance()->getSpawnerDrops($this->legacyNetworkTypeId);
     }
 
     public function getXpDropAmount() : Int{
         return SakuraSpawners::getInstance()->getSpawnerXp($this->legacyNetworkTypeId);
-    }
-
-    public function getSize() : EntitySizeInfo{
-        return SakuraSpawners::getInstance()->getSpawnerSize($this->legacyNetworkTypeId);
     }
 
     protected function getInitialSizeInfo() : EntitySizeInfo{

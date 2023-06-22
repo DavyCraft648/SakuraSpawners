@@ -27,10 +27,7 @@ use pocketmine\plugin\PluginOwned;
 
 use pocketmine\player\Player;
 
-use pocketmine\item\ItemIds;
 use pocketmine\item\StringToItemParser;
-
-use pocketmine\block\BlockLegacyIds;
 
 use DayKoala\utils\SpawnerNames;
 
@@ -109,7 +106,7 @@ final class SakuraSpawnersCommand extends Command implements PluginOwned{
                     return false;
                  }
                  $item = $sender->getInventory()->getItemInHand();
-                 if($item->getId() === ItemIds::AIR){
+                 if($item->isNull()){
                     $sender->sendMessage(self::PREFIX ."Invalid item in hand.");
                     return false;
                  }
@@ -169,7 +166,7 @@ final class SakuraSpawnersCommand extends Command implements PluginOwned{
                     $sender->sendMessage(self::PREFIX ."Invalid id.");
                     return false;
                  }
-                 $item = StringToItemParser::getInstance()->parse(BlockLegacyIds::MONSTER_SPAWNER .":". $id);
+                 $item = StringToItemParser::getInstance()->parse("monster_spawner:". $id);
                  if($item === null){
                     $sender->sendMessage(self::PREFIX ."Invalid entity id.");
                     return false;

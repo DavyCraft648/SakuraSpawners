@@ -20,66 +20,60 @@
 
 namespace DayKoala\item;
 
-use pocketmine\item\Item;
+use pocketmine\item\ItemIdentifier;
 use pocketmine\item\ItemUseResult;
 
-use pocketmine\world\Position;
-
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\DoubleTag;
-use pocketmine\nbt\tag\FloatTag;
-
-use pocketmine\data\bedrock\LegacyEntityIdToStringIdMap;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\world\World;
 
 use pocketmine\entity\Entity;
-use pocketmine\entity\EntityDataHelper as Helper;
-use pocketmine\entity\EntityFactory;
+use pocketmine\entity\Location;
 
 use pocketmine\player\Player;
 
 use pocketmine\block\Block;
+use pocketmine\block\tile\MonsterSpawner;
 
 use pocketmine\math\Vector3;
 
 use DayKoala\entity\SpawnerEntity;
 
-use DayKoala\block\tile\Spawner;
+use DayKoala\SakuraSpawners;
+use function mt_rand;
 
-class SpawnEgg extends Item{
+class SpawnEgg extends \pocketmine\item\SpawnEgg{
 
-    protected function createEntity(Position $pos) : Entity{
-        $nbt = CompoundTag::create()
-        ->setString("id", LegacyEntityIdToStringIdMap::getInstance()->legacyToString($this->getMeta()) ?? ":")
-        ->setTag("Pos", new ListTag([
-            new DoubleTag($pos->x + 0.5),
-            new DoubleTag($pos->y + 1.2),
-            new DoubleTag($pos->z + 0.5)
-        ]))
-        ->setTag("Rotation", new ListTag([
-            new FloatTag(lcg_value() * 360),
-            new FloatTag(0.0)
-        ]));
-        return EntityFactory::getInstance()->createFromData($pos->getWorld(), $nbt) ?? new SpawnerEntity(Helper::parseLocation($nbt, $pos->getWorld()), $nbt);
+    public function __construct(ItemIdentifier $identifier, string $name, private string $entityTypeId){ parent::__construct($identifier, $name); }
+
+    protected function createEntity(World $world, Vector3 $pos, float $yaw, float $pitch) : Entity{
+        return new SpawnerEntity(Location::fromObject($pos, $world), $this->entityTypeId);
     }
 
-    public function onInteractBlock(Player $player, Block $replace, Block $clicked, Int $face, Vector3 $click) : ItemUseResult{
-        $tile = $player->getWorld()->getTile($clicked->getPosition());
-        if($tile instanceof Spawner){
-           if($tile->getLegacyEntityId() === $this->getMeta()){
-              return ItemUseResult::FAIL();
-           }
-           $tile->setEntityId(LegacyEntityIdToStringIdMap::getInstance()->legacyToString($this->getMeta()) ?? ":");
-        }else{
-           $entity = $this->createEntity($clicked->getPosition());
-           $entity->spawnToAll();
+    public function onInteractBlock(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, array &$returnedItems) : ItemUseResult{
+        $tile = $player->getWorld()->getTile($pos = $blockClicked->getPosition());
+        if($tile instanceof MonsterSpawner){
+            $world = $player->getWorld();
+            $entityTypeIdProp = new \ReflectionProperty($tile, "entityTypeId");
+            if(($entityTypeId = $entityTypeIdProp->getValue($tile)) === $this->entityTypeId){
+                return ItemUseResult::FAIL();
+            }
+            $entityTypeIdProp->setValue($tile, $this->entityTypeId);
+            $spawnDelay = mt_rand(MonsterSpawner::DEFAULT_MIN_SPAWN_DELAY, MonsterSpawner::DEFAULT_MAX_SPAWN_DELAY);
+            (new \ReflectionProperty($tile, "spawnDelay"))->setValue($tile, $spawnDelay);
+            if($entityTypeId === ":"){
+                SakuraSpawners::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() use ($tile) : void{
+                    SakuraSpawners::getInstance()->updateSpawner($tile);
+                }), $spawnDelay);
+            }
+            $world->setBlock($pos, $world->getBlock($pos));
+            $this->pop();
+            return ItemUseResult::SUCCESS();
         }
-        $this->pop();
-        return ItemUseResult::SUCCESS();
+        return parent::onInteractBlock($player, $blockReplace, $blockClicked, $face, $clickVector, $returnedItems);
     }
 
     public function onInteractEntity(Player $player, Entity $entity, Vector3 $click) : Bool{
-        if(!$entity instanceof SpawnerEntity or $entity->getModifiedLegacyNetworkTypeId() !== $this->getMeta()){
+        if(!$entity instanceof SpawnerEntity or $entity->getModifiedNetworkTypeId() !== $this->entityTypeId){
            return false;
         }
         $entity->addStackSize(1);
